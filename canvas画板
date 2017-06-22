@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>canvas画板</title>
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background: gainsboro;
+        }
+        #cav{
+            background: white;
+            display: block;
+            margin: 0 auto;
+            margin-top: 10px;
+        }
+        #sel{
+            display: block;
+            width: 1190px;
+            height: 30px;
+            background: white;
+            padding: 5px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            margin: 0 auto;
+            font-family:微软雅黑;
+            font-size: 18px;
+        }
+        #xpc{
+            font-family: 微软雅黑;
+            font-size: 18px;
+            padding: 3px;
+            margin-left: 20px;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = function(){
+//                获得画板
+            var cav = document.getElementById("cav");
+//                获得绘画环境
+            var cv = cav.getContext('2d');
+//                设置画笔默认颜色及粗细
+            cv.lineWidth=10;
+            //鼠标按下事件
+            cav.onmousedown = function(e){
+                ev = window.event||e;
+                var s_l = ev.offsetX||ev.layerX;
+                var s_t = ev.offsetY||ev.layerY;
+                //开始绘制路径
+                cv.beginPath();
+                //画笔起始位置
+                cv.moveTo(s_l,s_t);
+//                    鼠标移动事件
+                cav.onmousemove = function(e){
+                    var over_ev = window.event||e;
+                    var over_l = over_ev.offsetX||over_ev.layerX;
+                    var over_t = over_ev.offsetY||over_ev.layerY;
+                    //结束位置
+                    cv.lineTo(over_l,over_t);
+                    //绘制线条
+                    cv.stroke();
+                }
+            }
+            //鼠标抬起事件
+            cav.onmouseup = function(){
+                //取消鼠标移动事件
+                cav.onmousemove = null;
+            }
+            //颜色改变事件
+            document.getElementById("ys").onchange = function(){
+                cv.strokeStyle = this.value;
+            }
+            //改变粗细
+            document.getElementById("cx").onchange = function(){
+                var cx = this.value;
+                cv.lineWidth = cx;
+                document.getElementById("cx_txt").innerHTML = cx;
+            }
+            //橡皮擦
+            document.getElementById("xpc").onclick = function(){
+                alert('开启橡皮擦')
+                cv.strokeStyle = 'white';
+            }
+        }
+    </script>
+</head>
+<body>
+<div id="sel">
+    画笔颜色：<input type="color" name="" id="ys" value="" />
+    画笔粗细：<input type="range" min="1" max="50" value="10" id="cx" />
+    <span id="cx_txt">10</span>
+    <input type="button" id="xpc" value="橡皮擦" />
+</div>
+<canvas id="cav" width="1200px" height="800px">
+    你的浏览器居然不支持Canvas？！赶快换一个吧！！
+</canvas>
+</body>
+</html>
